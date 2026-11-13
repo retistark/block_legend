@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>이메일 인증</title>
+<style>
+  :root { --navy:#1f2a44; --blue:#3b6cf6; --red:#e5484d; --bg:#f4f6fb; --muted:#6b7385; }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+         background:var(--bg); font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
+         color:var(--navy); padding:24px; }
+  .card { background:#fff; border-radius:20px; padding:40px 28px; max-width:380px; width:100%;
+          text-align:center; box-shadow:0 8px 30px rgba(31,42,68,.08); }
+  .icon { width:72px; height:72px; border-radius:50%; margin:0 auto 20px; display:flex;
+          align-items:center; justify-content:center; background:#e8efff; }
+  .icon.err { background:#fdecec; }
+  h1 { font-size:22px; margin:0 0 12px; }
+  p { font-size:15px; line-height:1.6; color:var(--muted); margin:0; }
+  .steps { text-align:left; background:var(--bg); border-radius:12px; padding:16px 18px; margin-top:22px;
+           font-size:14px; line-height:1.8; color:var(--navy); }
+  .en { margin-top:22px; font-size:13px; color:#9aa1b0; }
+</style>
+</head>
+<body>
+<main class="card">
+  <div id="ok">
+    <div class="icon">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#3b6cf6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+    </div>
+    <h1>이메일 인증 완료!</h1>
+    <p>이제 이 창을 닫고 앱으로 돌아가<br>가입한 이메일과 비밀번호로 로그인해 주세요.</p>
+    <div class="steps">앱 → 설정 → 계정·동기화 → 로그인</div>
+    <p class="en">Your email is verified. Close this page, go back to the app and log in.</p>
+  </div>
+
+  <div id="err" hidden>
+    <div class="icon err">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#e5484d" stroke-width="2.5" stroke-linecap="round"><path d="M12 7v6M12 17h.01"/></svg>
+    </div>
+    <h1>인증 링크가 만료됐어요</h1>
+    <p>링크가 오래됐거나 이미 사용된 링크예요.<br>먼저 앱에서 로그인을 시도해 보시고,<br>안 되면 다시 가입해서 새 인증 메일을 받아 주세요.</p>
+    <p class="en">This link has expired or was already used. Try logging in from the app, or sign up again to get a new email.</p>
+  </div>
+</main>
+<script>
+  // Supabase는 실패 시 #error=...&error_code=otp_expired 같은 값을 붙여 보냄
+  var q = (location.hash || '').slice(1) + '&' + (location.search || '').slice(1);
+  if (/(^|&)error(_code)?=/.test(q)) {
+    document.getElementById('ok').hidden = true;
+    document.getElementById('err').hidden = false;
+  }
+  // 주소창에 남은 토큰 정보 지우기
+  if (location.hash) history.replaceState(null, '', location.pathname);
+</script>
+</body>
+</html>
